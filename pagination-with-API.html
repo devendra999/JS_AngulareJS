@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" ng-app="myApp">
+
+<head>
+    <title></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.3/font/bootstrap-icons.min.css" />
+    
+</head>
+
+<body ng-controller="myController">
+
+    <div>
+
+        <div class="container">
+            <div class="row user-list">
+                <div ng-repeat="data in userList" class="col-md-4 single-item">
+                    <h5>{{ data.title }}</h5>
+                    <p>{{ data.body }}</p>
+                </div>
+            </div>
+            <ul class="listPage">
+            
+            </ul>
+            <!-- <div class="pagination w-auto btn-group text-center">
+                <button class="btn btn-primary"> Prev </button>
+                <button class="btn btn-primary"> 1 </button>
+                <button class="btn btn-primary"> 2 </button>
+                <button class="btn btn-primary"> Next </button>
+            </div> -->
+        </div>
+
+    </div>
+
+
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script type="text/javascript">
+        var app = angular.module("myApp", []);
+        app.controller('myController', function ($scope, $http) {
+
+            $scope.userList = [];
+
+            try {
+                $http.get("https://jsonplaceholder.typicode.com/posts")
+                .then(function (response) {
+                    $scope.userList = response.data;
+                    console.log($scope.userList);
+
+                    setTimeout(() => {
+                        // pagination
+                        let thisPage = 1;
+                        let limit = 10;
+                        let list = document.querySelectorAll('.single-item');
+
+
+                        $scope.loadItem = function() {
+                            let beginGet = limit * (thisPage - 1);
+                            let endGet = limit * thisPage - 1;
+                            list.forEach((item, key) => {
+                                if (key >= beginGet && key <= endGet) {
+                                    item.style.display = 'block';
+                                } else {
+                                    item.style.display = 'none';
+                                }
+                            })
+                            listPage();
+                        }
+                        $scope.loadItem();
+                        function listPage() {
+                            let count = Math.ceil(list.length / limit);
+                            document.querySelector('.listPage').innerHTML = '';
+
+                            if (thisPage != 1) {
+                                let prev = document.createElement('li');
+                                prev.innerText = 'PREV';
+                                prev.setAttribute('onclick', "changePage(" + (thisPage - 1) + ")");
+                                document.querySelector('.listPage').appendChild(prev);
+                            }
+
+                            for (i = 1; i <= count; i++) {
+                                let newPage = document.createElement('li');
+                                newPage.innerText = i;
+                                if (i == thisPage) {
+                                    newPage.classList.add('active');
+                                }
+                                newPage.setAttribute('onclick', "changePage(" + i + ")");
+                                document.querySelector('.listPage').appendChild(newPage);
+                            }
+
+                            if (thisPage != count) {
+                                let next = document.createElement('li');
+                                next.innerText = 'NEXT';
+                                next.setAttribute('onclick', "changePage(" + (thisPage + 1) + ")");
+                                document.querySelector('.listPage').appendChild(next);
+                            }
+                        }
+                        function changePage(i) {
+                            thisPage = i;
+                            $scope.loadItem();
+                        }
+                    }, 500);
+
+                });
+            } catch(error) {
+                console.log(`Something Wrong ${error}`);
+            }
+
+            
+
+        });
+    </script>
+</body>
+
+</html>

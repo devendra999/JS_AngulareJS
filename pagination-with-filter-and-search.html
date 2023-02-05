@@ -1,0 +1,719 @@
+<!DOCTYPE HTML>
+<html lang="en" ng-app="myApp">
+	<head>
+		<meta charset="utf-8">
+		<title>Dynamic Pagination w/ Filtering</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="">
+		<meta name="author" content="Kim Maida">
+
+		<!-- JS Libraries -->
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.min.js" type="text/javascript"></script>
+		<script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.10.0.js" type="text/javascript"></script>
+
+		<!-- Angular Scripts -->
+		<script src="script.js" type="text/javascript"></script>
+
+		<!-- Bootstrap -->
+		<link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+		
+	</head>
+
+	<body>
+
+		<div ng-controller="PageCtrl">
+			<div ng-controller="PageCtrl">
+			<label>Search:</label> <input type="text" ng-model="search.name" placeholder="Search" />
+			<br />
+			
+			<label>Filter by Category:</label>
+			<ul>
+				<li><a href="" ng-click="search.category='engineering'">Engineering</a></li>
+				<li><a href="" ng-click="search.category='management'">Management</a></li>
+				<li><a href="" ng-click="search.category='business'">Business</a></li>
+			</ul>
+
+			<label>Filter by Branch:</label>
+			<ul>
+				<li><a href="" ng-click="search.branch='West'">West</a></li>
+				<li><a href="" ng-click="search.branch='East'">East</a></li>
+			</ul>
+
+			<p><strong><a href="" ng-click="resetFilters()">Show All</a></strong></p>
+
+			<h1>Items</h1>
+			<ul>
+				<li ng-repeat="item in filtered = items | filter:search | startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit">{{item.name}}</li>
+			</ul>
+
+			<pagination page="currentPage" max-size="noOfPages" total-items="totalItems" items-per-page="entryLimit"></pagination>
+		</div>
+
+        <script>
+            var app = angular.module('myApp', ['ui.bootstrap']);
+
+app.filter('startFrom', function () {
+	return function (input, start) {
+		if (input) {
+			start = +start;
+			return input.slice(start);
+		}
+		return [];
+	};
+});
+
+app.controller('PageCtrl', ['$scope', 'filterFilter', function ($scope, filterFilter) {
+	$scope.items = [{
+		"name": "name 1",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "business"
+		}],
+			"branch": "West"
+	}, {
+		"name": "name 2",
+			"category": [{
+			"category": "engineering"
+		}],
+			"branch": "West"
+	}, {
+		"name": "name 3",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "engineering"
+		}],
+			"branch": "West"
+	}, {
+		"name": "name 4",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "business"
+		}],
+			"branch": "West"
+	}, {
+		"name": "name 5",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "name 6",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "name 7",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "name 8",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "West"
+	}, {
+		"name": "name 9",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "name 10",
+			"category": [{
+			"category": "management"
+		}],
+			"branch": "East"
+	}, {
+		"name": "name 11",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "name 12",
+			"category": [{
+			"category": "engineering"
+		}],
+			"branch": "West"
+	}, {
+		"name": "name 13",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "business"
+		}],
+			"branch": "West"
+	}, {
+		"name": "name 14",
+			"category": [{
+			"category": "engineering"
+		}],
+			"branch": "East"
+	}, {
+		"name": "name 15",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "engineering"
+		}],
+			"branch": "East"
+	}, {
+		"name": "name 16",
+			"category": [{
+			"category": "management"
+		}],
+			"branch": "West"
+	}, {
+		"name": "name 17",
+			"category": [{
+			"category": "management"
+		}],
+			"branch": "East"
+	}, {
+		"name": "name 18",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "West"
+	}, {
+		"name": "name 19",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "West"
+	}, {
+		"name": "name 20",
+			"category": [{
+			"category": "engineering"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Peter",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Frank",
+			"category": [{
+			"category": "management"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Joe",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Ralph",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Gina",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Sam",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "engineering"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Peter",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Frank",
+			"category": [{
+			"category": "management"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Joe",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Ralph",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Gina",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Sam",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "engineering"
+		}],
+			"branch": "East"
+	},{
+		"name": "Peter",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Frank",
+			"category": [{
+			"category": "management"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Joe",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Ralph",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Gina",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Sam",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "engineering"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Peter",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Frank",
+			"category": [{
+			"category": "management"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Joe",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Ralph",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Gina",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Sam",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "engineering"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Peter",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Frank",
+			"category": [{
+			"category": "management"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Joe",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Ralph",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Gina",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Sam",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "engineering"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Peter",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Frank",
+			"category": [{
+			"category": "management"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Joe",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Ralph",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Gina",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Sam",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "engineering"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Peter",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Frank",
+			"category": [{
+			"category": "management"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Joe",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Ralph",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Gina",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Sam",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "engineering"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Peter",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Frank",
+			"category": [{
+			"category": "management"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Joe",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Ralph",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Gina",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Sam",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "engineering"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Peter",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Frank",
+			"category": [{
+			"category": "management"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Joe",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Ralph",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Gina",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Sam",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "engineering"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Peter",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Frank",
+			"category": [{
+			"category": "management"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Joe",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Ralph",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Gina",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Sam",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "engineering"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Peter",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Frank",
+			"category": [{
+			"category": "management"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Joe",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Ralph",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Gina",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Sam",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "engineering"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Peter",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Frank",
+			"category": [{
+			"category": "management"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Joe",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Ralph",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Gina",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Sam",
+			"category": [{
+			"category": "management"
+		}, {
+			"category": "engineering"
+		}],
+			"branch": "East"
+	}, {
+		"name": "Britney",
+			"category": [{
+			"category": "business"
+		}],
+			"branch": "West"
+	}];
+
+	// create empty search model (object) to trigger $watch on update
+	$scope.search = {};
+
+	$scope.resetFilters = function () {
+		// needs to be a function or it won't trigger a $watch
+		$scope.search = {};
+	};
+
+	// pagination controls
+	$scope.currentPage = 1;
+	$scope.totalItems = $scope.items.length;
+	$scope.entryLimit = 8; // items per page
+	$scope.noOfPages = Math.ceil($scope.totalItems / $scope.entryLimit);
+
+	// $watch search to update pagination
+	$scope.$watch('search', function (newVal, oldVal) {
+		$scope.filtered = filterFilter($scope.items, newVal);
+		$scope.totalItems = $scope.filtered.length;
+		$scope.noOfPages = Math.ceil($scope.totalItems / $scope.entryLimit);
+		$scope.currentPage = 1;
+	}, true);
+}]);
+        </script>
+
+	</body>
+</html>

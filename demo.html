@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" ng-app="myApp">
+
+<head>
+    <title></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.3/font/bootstrap-icons.min.css" />
+    <style>
+        .req {
+            color: red;
+        }
+        
+        *:required {
+            background-color: gold;
+        }
+    </style>
+</head>
+
+<body ng-controller="myController">
+
+    <div>
+
+        <form action="">
+            <input class="req" type="email" id="username" required placeholder="Enter Name" oninvalid="this.setCustomValidity('Enter')" oninput="this.setCustomValidity('Please enter valid')" />
+            <button>submit</button>
+        </form>
+
+    </div>
+
+
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script type="text/javascript">
+        var app = angular.module("myApp", []);
+        app.controller('myController', function($scope, $http) {
+
+            // code edecute
+
+        });
+    </script>
+</body>
+
+</html>

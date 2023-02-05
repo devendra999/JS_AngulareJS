@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" ng-app="myApp">
+
+<head>
+    <title></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.3/font/bootstrap-icons.min.css" />
+
+</head>
+
+<body ng-controller="myController">
+
+
+    <div class="container p-4 d-flex align-items-center justify-content-center">
+        <div class="w-50  bg-light p-5 ">
+            <div class="bg-light form-group d-flex align-items-center">
+                <input type="text" name="" id="inputValue" class="form-control">
+                <button class="btn btn-sm btn-success" id="add-data" ng-click="addUser()">Add</button>
+            </div>
+            <div class="search-user mt-2">
+                <div class="text-center">
+                    <input ng-model= "searchUser" type="text" placeholder="Search user by name" class="form-control" />
+                </div>
+            </div>
+            <div class="list-area">
+                <div ng-repeat="x in data | filter:searchUser track by $index" ng-value="{{$index}}"
+                    class="single-list border d-flex justify-content-between p-2 mt-3">
+                    <span>{{ x.name }}</span>
+                    <div class="btn-group">
+                        <button id="editNote" class="btn btn-sm btn-primary" ng-click="editUser($index);">Edit</button>
+                        <button id="deltNote" class="btn btn-sm btn-danger" ng-click="deltUser($index);">Delt</button>
+                    </div>
+                </div>
+                <div ng-show="(data |filter:searchUser).length == 0" class="no-data text-center p-2">
+                    <h6>No Data Found</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script type="text/javascript">
+        var app = angular.module("myApp", []);
+        app.controller('myController', function ($scope, $http) {
+            
+            if(JSON.parse(localStorage.getItem('User List'))) {
+                $scope.data = JSON.parse(localStorage.getItem('User List'));
+            } else {
+                $scope.data = [];
+            }
+            $scope.toggleItem = false;
+            $scope.editingUser = '';
+            
+            $scope.addUser = function () {
+                let inputValue = document.getElementById('inputValue').value;
+                if (inputValue && $scope.toggleItem == false) {
+                    var newUser = {
+                        id: new Date().getTime(),
+                        name: document.getElementById('inputValue').value
+                    }
+                    $scope.data.unshift(newUser);
+                    localStorage.setItem('User List', JSON.stringify($scope.data))
+                    document.getElementById('inputValue').value = '';
+                } else if (inputValue && $scope.toggleItem == true) {
+                    let updUser = $scope.data.map((e) => {
+                        if (e.id == $scope.editingUser) {
+                            return {
+                                id: $scope.editingUser,
+                                name: inputValue
+                            }
+                        }
+                        return e;
+                    });
+                    $scope.data = updUser;
+                    localStorage.setItem('User List', JSON.stringify($scope.data));
+                    document.getElementById('add-data').innerHTML = 'Add';
+                    $scope.toggleItem = false;
+                    $scope.editingUser = '';
+                    document.getElementById('inputValue').value = '';
+                } else {
+                    alert("Please add user name");
+                }
+            }
+
+            $scope.deltUser = function (e) {
+                $scope.data.splice(e, 1);
+                localStorage.setItem('User List', JSON.stringify($scope.data));
+                document.getElementById('add-data').innerHTML = 'Add';
+                $scope.toggleItem = false;
+            }
+
+            $scope.editUser = function (e) {
+                document.getElementById('inputValue').value = $scope.data[e].name;
+                document.getElementById('add-data').innerHTML = 'Edit';
+                $scope.toggleItem = true;
+                $scope.editingUser = $scope.data[e].id;
+                document.getElementById('inputValue').focus();
+            }
+
+        });
+    </script>
+</body>
+
+</html>

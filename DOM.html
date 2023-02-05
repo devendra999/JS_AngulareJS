@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" ng-app="myApp">
+
+<head>
+    <title></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.3/font/bootstrap-icons.min.css" />
+    
+</head>
+
+<body ng-controller="myController">
+
+    <div class="container">
+
+        <table border="0">
+            <tr>
+                <td><input type="checkbox" ng-model="enableDisableButton">Disable Button</td>
+                <td><button ng-disabled="enableDisableButton">Click Me!</button></td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" ng-model="showHide1">Show Button</td>
+                <td><button ng-show="showHide1">Click Me!</button></td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" ng-model="showHide2">Hide Button</td>
+                <td><button ng-hide="showHide2">Click Me!</button></td>
+            </tr>
+            <tr>
+                <td>
+                    <p>Total click: {{ clickCounter }}</p>
+                </td>
+                <td><button ng-click="clickCounter = clickCounter + 1">Click Me!</button></td>
+            </tr>
+        </table>
+
+    </div>
+
+
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script type="text/javascript">
+        var app = angular.module("myApp", []);
+        app.controller('myController', function ($scope, $http) {
+
+            // code edecute
+
+        });
+    </script>
+</body>
+
+</html>

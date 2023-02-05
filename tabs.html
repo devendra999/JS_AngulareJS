@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" ng-app="myApp">
+
+<head>
+    <title></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.3/font/bootstrap-icons.min.css" />
+    <style>
+        .activetab {
+        color: black; /* Colors the text in black */
+        border-bottom: 3px solid #2d2d2d; /* Underlines the text with a bold dark border */
+        }
+        .tabs {
+        margin: 1em; /* Adds lots of space around the tabs, to avoid the border to fall into the tab content area */
+        }
+
+        /* Only visible when the mouse is on a tab title */
+        .tab:hover {
+        color: black; /* Colors the text in black to highlight the possible selection */
+        text-decoration: none; /* Removes the hyperlink underline style */
+        }
+    </style>
+</head>
+
+<body ng-controller="myController">
+
+    <div class="container">
+        <div class="ods-box" ng-init="tabselector = 'firsttab'">
+      
+          <div class="tabs">
+            <a class="tab" ng-click="tabselector = 'firsttab'" ng-class="{'activetab' : tabselector == 'firsttab'}">1st tab title</a>
+            <a class="tab" ng-click="tabselector = 'secondtab'" ng-class="{'activetab' : tabselector == 'secondtab'}">2nd tab title</a>
+            <a class="tab" ng-click="tabselector = 'thirdtab'" ng-class="{'activetab' : tabselector == 'thirdtab'}">3rd tab title</a>
+          </div>
+      
+          <div class="ods-box">
+            <div ng-if="tabselector == 'firsttab'">
+              Content of first tab
+            </div>
+            <div ng-if="tabselector == 'secondtab'">
+              Content of second tab
+            </div>
+            <div ng-if="tabselector == 'thirdtab'">
+              Content of third tab
+            </div>
+          </div>
+      
+        </div>
+      </div>
+
+
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script type="text/javascript">
+        var app = angular.module("myApp", []);
+        app.controller('myController', function ($scope, $http) {
+
+            // code edecute
+
+        });
+    </script>
+</body>
+
+</html>
