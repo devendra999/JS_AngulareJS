@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" ng-app="myApp">
+
+<head>
+    <title></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body ng-controller="myController">
+
+    <div class="container p-5">
+        <div class="configuration-container" ng-style="{ display: current_page == 'form_page'? 'flex' : 'none' }">
+            <div ng-class="{'col-12 col-sm-12 col-md-7 col-lg-8 col-xl-8 col-xxl-8': (is_checked == true && chat_bot_mobile == false && screen_size >= 768) || (is_checked == true && chat_bot_mobile == true && screen_size < 768) , 'col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12' : (is_checked == false && chat_bot_mobile == false && screen_size >= 768) || (is_checked == true && chat_bot_mobile == false && screen_size < 768) || (is_checked == false && chat_bot_mobile == false && screen_size < 768)}"
+                id="outer-div">
+                <i class="mobile" onclick="angular.element(this).scope().open_chat_bot(this)" ng-show="is_checked == true"><img
+                        src="../static/image/mobile.png" alt=""></i>
+                <div class="user_config_left">
+                    <div class="user_config_left_inner" ng-style="{ background  : is_checked == true ? 'none' : 'block' }">
+                        <div class="user_config_header" ng-style="{ display : is_checked == false ? 'table' : '' }">
+
+                            <div class="form-build-wrapper" ng-if="is_checked == true">
+                                <div class="active-form">
+                                    <div class="title">
+                                        <h6>Activate form for Publish</h6>
+                                    </div>
+                                    <div class="active-deactive">
+                                        <span class="deactive">De-Active</span>
+                                        <div class="toggle_main">
+                                            <label class="toggle">
+                                                <input type="checkbox" id="form_allow" checked
+                                                    onclick="angular.element(this).scope().check_form_allowance()">
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div>
+                                        <span>Active</span>
+                                    </div>
+                                </div>
+                                <div class="form-build">
+                                    <!-- <div class="form-title">
+                                                        <h5><img src="../static/image/form-build-icon.svg" alt=""> Please enter the
+                                                            name of Form you build</h5>
+                                                    </div> -->
+                                    <div class="main-form">
+                                        <div id="form_render">
+                                            <div class="single-item" ng-repeat="field in allField">
+                                                <div class="type">{a field.type a}</div>
+                                                <div class="label other-list"
+                                                    ng-if="field.type == 'text' || field.type == 'textarea' || field.type == 'email' || field.type == 'number'">
+                                                    {a field.label a}</div>
+                                                <div class="label other-list" ng-if="field.radio.length > 0">
+                                                    <div class="d-block">{a field.label a}</div>
+                                                    <span class="all-list" ng-repeat="list in field.radio">{a
+                                                        list.label a}</span>
+                                                </div>
+                                                <div class="label other-list checkbox" ng-if="field.checkbox.length > 0">
+                                                    <div class="d-block">{a field.label a}</div>
+                                                    <span class="all-list" ng-repeat="clist in field.checkbox">{a
+                                                        clist.label a}</span>
+                                                </div>
+                                                <div class="action-btn">
+                                                    <!-- <button ng-click="viewField(field)">edit</button> -->
+                                                    <button ng-click="viewField($index)"><img
+                                                            src="edit-icon.svg" /></button>
+                                                    <button ng-click="removeField($index)"><img
+                                                            src="delet-icon.svg" /></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button id="add_Field" ng-click="addElement()"><i class="fa-solid fa-plus"></i> Add
+                                            Field</button>
+                                    </div>
+                                    <div class="save-form form-title">
+                                        <h5>Save Form</h5>
+                                    </div>
+                                </div>
+
+                                <!-- Modal For Adding a new Section in Pre Defined Response for Add -->
+                                <div class="modal" id="formAdd" style="display: none;">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="preDefinedModalLabelForUpdate">Add Field
+                                                </h5>
+                                                <button type="button" class="btn-close"
+                                                    onclick="angular.element(this).scope().close_modal_data_for_form(this)"><span
+                                                        class="close-icon">&times;</span></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="item-list type-field">
+                                                    <label for="">Select input type</label>
+                                                    <select id="type-field">
+                                                        <option value="text">Text</option>
+                                                        <option value="number">Number</option>
+                                                        <option value="email">Email</option>
+                                                        <option value="textarea">Textarea</option>
+                                                        <option value="radio">Radio</option>
+                                                        <option value="checkbox">Checkbox</option>
+                                                    </select>
+                                                    <span class="form-error">Please select input type</span>
+                                                </div>
+                                                <div class="item-list label-field">
+                                                    <input type="text" id="label-field" placeholder="Placeholder" />
+                                                    <span class="form-error">Please select placeholder name</span>
+                                                </div>
+                                                <div class="item-list min-field" style="display: none;">
+                                                    <!-- <label for="">Min Length</label> -->
+                                                    <input type="number" placeholder="Min Length" id="min-field" min="0"
+                                                        onchange="angular.element(this).scope().minMaxValidation(this)"
+                                                        onkeyup="angular.element(this).scope().enforceMinMax(this)" />
+                                                </div>
+                                                <div class="item-list max-field" style="display: none;">
+                                                    <!-- <label for="" >Max Length</label> -->
+                                                    <input type="number" placeholder="Max Length" id="max-field" min="0"
+                                                        onchange="angular.element(this).scope().minMaxValidation(this)"
+                                                        onkeyup="angular.element(this).scope().enforceMinMax(this)" />
+                                                </div>
+                                                <div class="item-list radio-field" style="display: none;">
+                                                    <div class="title d-flex">
+                                                        <div class="col-5">
+                                                            <strong>Name</strong>
+                                                        </div>
+                                                        <div class="col-5">
+                                                            <strong>Value</strong>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <button ng-click="radio_append()"><i
+                                                                    class="fa-solid fa-plus"></i></button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="value d-flex">
+                                                        <div class="col-5">
+                                                            <input class="radio radio-field-name redio-required" type="text"
+                                                                value="radio-1" />
+                                                        </div>
+                                                        <div class="col-5">
+                                                            <input class="radio radio-field-value redio-required" type="text"
+                                                                value="radio-1" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="value d-flex">
+                                                        <div class="col-5">
+                                                            <input class="radio radio-field-name redio-required"
+                                                                id="radio-option" value="radio-2" />
+                                                        </div>
+                                                        <div class="col-5">
+                                                            <input class="radio radio-field-value redio-required" type="text"
+                                                                id="radio-option-1" value="radio-2" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <span class="form-error error-radio">Please field radio button name and
+                                                    value</span>
+                                                <div class="item-list checkbox-field" style="display: none;">
+                                                    <div class="title d-flex">
+                                                        <div class="col-5">
+                                                            <strong>Name</strong>
+                                                        </div>
+                                                        <div class="col-5">
+                                                            <strong>Value</strong>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <button ng-click="checkbox_append()"><i
+                                                                    class="fa-solid fa-plus"></i></button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="value d-flex">
+                                                        <div class="col-5">
+                                                            <input type="text"
+                                                                class="checkbox checkbox-field-name checkbox-required"
+                                                                value="checkbox-1" />
+                                                        </div>
+                                                        <div class="col-5">
+                                                            <input type="text"
+                                                                class="checkbox checkbox-field-value checkbox-required"
+                                                                value="checkbox-1" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="value d-flex">
+                                                        <div class="col-5">
+                                                            <input type="text"
+                                                                class="checkbox checkbox-field-name checkbox-required"
+                                                                value="checkbox-2" />
+                                                        </div>
+                                                        <div class="col-5">
+                                                            <input type="text"
+                                                                class="checkbox checkbox-field-value checkbox-required"
+                                                                id="checkbox-option-1" value="checkbox-2" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <span class="form-error error-checkbox">Please field checkbox button name and
+                                                    value</span>
+                                                <div class="item-list required-field">
+                                                    <input id="required-field" type="checkbox" value="" />
+                                                    <label for="required">Required</label>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer add-new-field">
+                                                <button type="button" class="btn submit-btn"
+                                                    ng-click="saveField()">Save</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Modal For Adding a new Section in Pre Defined Response for Edit -->
+                                <div class="modal" id="viewField" style="display: none;">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="preDefinedModalLabelForUpdate">Edit
+                                                    Field</h5>
+                                                <button type="button" class="btn-close"
+                                                    onclick="angular.element(this).scope().close_modal_data_for_form(this)"><span
+                                                        class="close-icon">&times;</span></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="item-list type-field">
+                                                    <!-- <label for="">Select input type</label> -->
+                                                    <select name="type" ng-model="type" id="type-field-edit">
+                                                        <option value="text">Text</option>
+                                                        <option value="number">Number</option>
+                                                        <option value="email">Email</option>
+                                                        <option value="textarea">Textarea</option>
+                                                        <option value="radio">Radio</option>
+                                                        <option value="checkbox">Checkbox</option>
+                                                    </select>
+                                                </div>
+                                                <div class="item-list label-field">
+                                                    <input type="text" id="label-field-edit" placeholder="Placeholder"
+                                                        ng-model="label" name="label" />
+                                                    <span class="form-error">Please select placeholder name</span>
+                                                </div>
+                                                <div class="item-list min-field" style="display: none;">
+                                                    <!-- <label for="">Min Length</label> -->
+                                                    <input type="number" placeholder="Min Length" id="min-field-edit" min="0"
+                                                        ng-model="min"
+                                                        onchange="angular.element(this).scope().minMaxValidation(this)"
+                                                        onkeyup="angular.element(this).scope().enforceMinMax(this)"
+                                                        name="min" />
+                                                </div>
+                                                <div class="item-list max-field" style="display: none;">
+                                                    <!-- <label for="">Max Length</label> -->
+                                                    <input type="number" placeholder="Max Length" min="0" id="max-field-edit"
+                                                        ng-model="max"
+                                                        onchange="angular.element(this).scope().minMaxValidation(this)"
+                                                        onkeyup="angular.element(this).scope().enforceMinMax(this)"
+                                                        name="max" />
+                                                </div>
+                                                <div class="item-list radio-field-edit" style="display: none;">
+                                                    <div class="title d-flex">
+                                                        <div class="col-5">
+                                                            <strong>Name</strong>
+                                                        </div>
+                                                        <div class="col-5">
+                                                            <strong>Value</strong>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <button id="radio_append"
+                                                                onclick="angular.element(this).scope().radio_append_edit(this)"><i
+                                                                    class="fa-solid fa-plus"></i></button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="radio_wrp radio_wrpp">
+                                                        <!-- <div class="value d-flex" ng-repeat="r in radio">
+                                                                            <div class="col-5"> <input
+                                                                                    class="radio radio-field-name-edit" type="text"
+                                                                                    ng-model="r.label" /> </div>
+                                                                            <div class="col-5"> <input
+                                                                                    class="radio radio-field-value-edit" type="text"
+                                                                                    ng-model="r.value" /> </div>
+                                                                            <div class="col-2"> <button
+                                                                                    ng-class="{'close_none': radio.length <= 2}"
+                                                                                    class="closeRadioButton"
+                                                                                    onclick="angular.element(this).scope().closeRadio(this)"><i
+                                                                                        class="fa-solid fa-xmark"></i></button>
+                                                                            </div>
+                                                                        </div> -->
+                                                    </div>
+                                                    <div class="radio_wrp" ng-if="radio.length == 0">
+                                                        <div class="value d-flex">
+                                                            <div class="col-5"> <input placeholder="Name"
+                                                                    class="radio radio-field-name-edit redio-required"
+                                                                    type="text" value="radio-1" /> </div>
+                                                            <div class="col-5"> <input
+                                                                    class="radio radio-field-value-edit redio-required"
+                                                                    type="text" value="radio-1" /> </div>
+                                                        </div>
+                                                        <div class="value d-flex">
+                                                            <div class="col-5"> <input placeholder="Value"
+                                                                    class="radio radio-field-name-edit redio-required"
+                                                                    id="radio-option" value="radio-2" /> </div>
+                                                            <div class="col-5"> <input
+                                                                    class="radio radio-field-value-edit redio-required"
+                                                                    type="text" id="radio-option-1" value="radio-2" /> </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <span class="form-error error-radio-edit">Please field radio button name and
+                                                    value</span>
+                                                <div class="item-list checkbox-field-edit" style="display: none;">
+                                                    <div class="title d-flex">
+                                                        <div class="col-5">
+                                                            <strong>Name</strong>
+                                                        </div>
+                                                        <div class="col-5">
+                                                            <strong>Value</strong>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <button id="checkbox_append"
+                                                                onclick="angular.element(this).scope().checkbox_append_edit(this)"><i
+                                                                    class="fa-solid fa-plus"></i></button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="checkbox_wrp checkbox_wrpp">
+                                                        <!-- <div class="value d-flex" ng-repeat="c in checkbox">
+                                                                            <div class="col-5"> <input type="text"
+                                                                                    class="checkbox checkbox-field-name-edit"
+                                                                                    ng-model="c.label" /> </div>
+                                                                            <div class="col-5"> <input type="text"
+                                                                                    class="checkbox checkbox-field-value-edit"
+                                                                                    ng-model="c.value" /> </div>
+                                                                            <div class="col-2"> <button
+                                                                                    ng-class="{'close_none': checkbox.length <= 2}"
+                                                                                    class="closeCheckbox"
+                                                                                    onclick="angular.element(this).scope().closeCheckbox(this)"><i
+                                                                                        class="fa-solid fa-xmark"></i></button>
+                                                                            </div>
+                                                                        </div> -->
+                                                    </div>
+                                                    <div class="checkbox_wrp" ng-if="checkbox.length == 0">
+                                                        <div class="value d-flex">
+                                                            <div class="col-5"> <input type="text"
+                                                                    class="checkbox checkbox-field-name-edit checkbox-required"
+                                                                    value="checkbox-1"> </div>
+                                                            <div class="col-5"> <input type="text"
+                                                                    class="checkbox checkbox-field-value-edit checkbox-required"
+                                                                    value="checkbox-1"> </div>
+                                                        </div>
+                                                        <div class="value d-flex">
+                                                            <div class="col-5"> <input type="text"
+                                                                    class="checkbox checkbox-field-name-edit checkbox-required"
+                                                                    value="checkbox-2"> </div>
+                                                            <div class="col-5"> <input type="text"
+                                                                    class="checkbox checkbox-field-value-edit checkbox-required"
+                                                                    value="checkbox-2"> </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <span class="form-error error-checkbox-edit">Please field checkbox button name
+                                                    and value</span>
+                                                <div class="item-list required-field">
+                                                    <input id="required-field-edit" type="checkbox" ng-model="required"
+                                                        name="required" />
+                                                    <label for="required">Required</label>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer add-edit-field">
+                                                <button type="button" id="saveField" class="btn submit-btn"
+                                                    ng-click="saveField()">Save</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="user_config_header_inner" ng-if="is_checked == false">
+
+                                <div class="user_form_on_off">
+                                    <div class="form_icon">
+                                        <img src="formlist.png" alt="">
+                                    </div>
+                                    <div class="form_name">
+                                        <h1 class="form_header">Do you want to</h1>
+                                    </div>
+                                    <div class="form_enable_disable">
+                                        <div class="de_active_form">
+                                            <label class="de_active"
+                                                ng-style="{ color: is_checked == false ? '#003271' : 'rgba(0, 43, 103, 0.57)' }">De-Active
+                                                Form</label>
+                                        </div>
+                                        <div class="toggle_main">
+                                            <label class="toggle">
+                                                <input type="checkbox" id="form_allow"
+                                                    onclick="angular.element(this).scope().check_form_allowance()">
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div>
+                                        <div class="active_form">
+                                            <label class="active_form_generation"
+                                                ng-style="{ color: is_checked == true ? '#003271' : 'rgba(0, 43, 103, 0.57)' }">Active
+                                                Form</label>
+                                        </div>
+                                    </div>
+                                    <div class="required_non_required">
+                                        <div class="radio-option" id="radio-option"
+                                            ng-style="{ display: is_checked == true ? 'flex' : 'none' }">
+                                            <div class="active_required_left">
+                                                <input type="radio" id="required-form" ng-model="form_radio" name="form_radio"
+                                                    value="required_form"
+                                                    onclick="angular.element(this).scope().check_form_allowance()">
+                                                <label for="required-form">Required</label>
+                                            </div>
+                                            <div class="active_required_right">
+                                                <input type="radio" id="non-required-form" ng-model="form_radio"
+                                                    name="form_radio" value="non_required_form"
+                                                    onclick="angular.element(this).scope().check_form_allowance()">
+                                                <label for="non-required-form">Non Required</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-12 col-md-5 col-lg-4 col-xl-4 col-xxl-4 h_100"
+                ng-style="{ display: (is_checked == true && chat_bot_mobile == false && screen_size >= 768) || (is_checked == true && chat_bot_mobile == true && screen_size < 768) ? 'block' : 'none' }">
+
+                <div class="chat-bot_wrp" id="chat-bot_wrp" ng-style="{ display: is_checked == true ? 'block' : 'none' }">
+                    <div class="chat_window">
+                        <div class="chat-box-header" id="phone_header">
+                            <div class="title">
+                                <div class="text_wrapper">
+                                    <div class="text-center ping_text">
+                                        <i class="fa fa-circle ping_status" aria-hidden="true" hidden=""></i>
+                                        <div class="chat-box-heading-wrp">
+                                            <div class="preview_header_container">
+                                                <div class="preview_header_logo {a show_header_logo a}"
+                                                    id="preview-header-logo-image-container">
+                                                    <img src="pexels-photo.jpg" alt="" id="preview-header-image" />
+                                                </div>
+                                                <div class="webchat_title">
+                                                    <div id="header_name_user" class="preview_header_name ng-binding">
+                                                        {a header_name a}
+                                                    </div>
+                                                    <span id="powered_by" class="chat-box-preheader">
+                                                        <i>
+                                                            Powered
+                                                            <by></by>
+                                                            <a href="https://www.turabit.com/" target="_blank">
+                                                                <span class="company_name"><b>Turabit</b></span>
+                                                            </a>
+                                                        </i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="sync-icon">
+                                <i class="fa-solid fa-xmark" onclick="angular.element(this).scope().close_chat_bot()"></i>
+                            </span>
+                        </div>
+                        <div class="user_form_header form-wrapper">
+                            <div class="face">
+                                <form>
+                                    <div id="previewForm">
+                                        <div ng-repeat="field in allField">
+                                            <div class="form-group"
+                                                ng-if="field.type == 'text' || field.type == 'email' || field.type == 'number'">
+                                                <input class="form_input" id="{a field.id a}" type="{a field.type a}"
+                                                    min="{a field.min a}" max="{a field.max a}"
+                                                    required="{a field.required a}" />
+                                                <label>{a field.label a} <span ng-if="field.required == true">*</span></label>
+                                            </div>
+                                            <div class="form-group textarea" ng-if="field.type == 'textarea'">
+                                                <textarea min="{a field.min a}" max="{a field.max a}" rows="3"></textarea>
+                                                <label>{a field.label a} <span ng-if="field.required == true">*</span></label>
+                                            </div>
+                                            <div class="form-group radio-item" ng-if="field.radio.length > 0">
+                                                <label for="">{a field.label a} <span
+                                                        ng-if="field.required == true">*</span></label>
+                                                <div class="single-item" ng-repeat="list in field.radio">
+                                                    <input class="form_input" name="{a field.label a}" type="{a field.type a}"
+                                                        required="{a field.required a}" />
+                                                    <label>{a list.label a}</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group checkbox-item" ng-if="field.checkbox.length > 0">
+                                                <label for="">{a field.label a} <span
+                                                        ng-if="field.required == true">*</span></label>
+                                                <div class="single-item" ng-repeat="list in field.checkbox">
+                                                    <input class="form_input" type="{a field.type a}" value="{a list.value a}"
+                                                        required="{a field.required a}" />
+                                                    <label>{a list.label a}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
